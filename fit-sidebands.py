@@ -125,14 +125,14 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--binning", choices=BOUNDARIES.keys(), default=BOUNDARIES_DEFAULT, help="myy binning scheme to use")
     parser.add_argument("--btag", type=int, default=BTAG_CAT_DEFAULT, help="the btag category to use (0,1,2)")
+    parser.add_argument("--highmass", action="store_true", help="use high mass selection")
+    parser.add_argument("--data-path", default="data-skim", help="the path containing the (skimmed) MxAOD data (default: ./data-skim)")
+    parser.add_argument("--sr", action="store_true", help="use the 0tag signal region")
     parser.add_argument("--out", default=".", help="directory in which to output images and parameters")
     parser.add_argument("--fastforward", action="store_true", help="don't pause after individual sideband slice fits")
-    parser.add_argument("--highmass", action="store_true", help="use high mass selection")
-    parser.add_argument("--sr", action="store_true", help="use the 0tag signal region")
     parser.add_argument("--model", default=MODEL_OPTIONS[0], choices=MODEL_OPTIONS, help="BG model to use. (default: %s)"%MODEL_OPTIONS[0])
     parser.add_argument("--tail", type=float, help="set the tail param to a specific value")
     parser.add_argument("--no-interact", action="store_true", help="skip interactive prompts.")
-    parser.add_argument("--data-path", default="data-skim", help="the path containing the (skimmed) MxAOD data")
     args = parser.parse_args()
 
     try:
@@ -154,7 +154,7 @@ if __name__ == "__main__":
     ds_boundaries, ds_boundaries_sr = BOUNDARIES[args.binning]
 
     t0 = r.TChain("CollectionTree")
-    map(t0.Add, glob("data-skim/*.root"))
+    map(t0.Add, glob(os.path.join(args.data_path, "*.root")))
 
     masscat = "highMass" if args.highmass else "lowMass"
     selection = "HGamEventInfoAuxDyn.yybb_%s_cutFlow==4 && HGamEventInfoAuxDyn.yybb_bTagCat==%d"%(masscat, args.btag)
