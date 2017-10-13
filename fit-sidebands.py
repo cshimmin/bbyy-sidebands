@@ -8,8 +8,8 @@ import os
 import array as arr
 
 # myybb range to fit for the lowmass analysis
-MASS_RANGE_LOW = (245, 485)
-NBINS_LOW = 48
+MASS_RANGE_LOW = (245, 610)
+NBINS_LOW = 56
 
 # myybb range to fit for the highmass analysis
 MASS_RANGE_HIGH = (335, 1140)
