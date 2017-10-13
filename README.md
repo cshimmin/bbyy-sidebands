@@ -5,6 +5,11 @@ This is a tool to estimate the shape parameters of the bbyy 4-body mass distribu
 The data is sliced into bins of m_yy, and the specified model (novosibirsk, landau, etc), is fit to the m_yybb distribution in each slice.
 The best-fit shape parameters of each slice are then plotted vs. m_yy and linear model is fit that may be interpolated to the signal region.
 
+Setup
+===
+You'll need some working combination of ROOT, X11, and numpy.
+It works on my CentOS7 local cluster w/ ALRB but not on my lxplus, ymmv.
+
 Usage
 ===
 
