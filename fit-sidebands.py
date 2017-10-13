@@ -123,8 +123,8 @@ MODEL_OPTIONS = ('novo', 'landau', 'mlandau', 'gamma', 'exp', 'epoly2', 'chase-1
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--binning", choices=BOUNDARIES.keys(), default=BOUNDARIES_DEFAULT, help="myy binning scheme to use")
-    parser.add_argument("--btag", type=int, default=BTAG_CAT_DEFAULT, help="the btag category to use (0,1,2)")
+    parser.add_argument("--binning", choices=sorted(BOUNDARIES.keys()), default=BOUNDARIES_DEFAULT, help="myy binning scheme to use (default: %s)"%BOUNDARIES_DEFAULT)
+    parser.add_argument("--btag", type=int, choices=(0,1,2), default=BTAG_CAT_DEFAULT, help="the btag category to use.")
     parser.add_argument("--highmass", action="store_true", help="use high mass selection")
     parser.add_argument("--data-path", default="data-skim", help="the path containing the (skimmed) MxAOD data (default: ./data-skim)")
     parser.add_argument("--sr", action="store_true", help="use the 0tag signal region")
@@ -134,6 +134,10 @@ if __name__ == "__main__":
     parser.add_argument("--tail", type=float, help="set the tail param to a specific value")
     parser.add_argument("--no-interact", action="store_true", help="skip interactive prompts.")
     args = parser.parse_args()
+
+    if args.sr and not args.btag == 0:
+        print >> sys.stderr, "ERROR: Can only do SR fits in 0-tag data."
+        sys.exit(1)
 
     try:
         os.makedirs(args.out)
@@ -155,6 +159,10 @@ if __name__ == "__main__":
 
     t0 = r.TChain("CollectionTree")
     map(t0.Add, glob(os.path.join(args.data_path, "*.root")))
+
+    if t0.GetEntries() == 0:
+        print >> sys.stderr, "ERROR: Found 0 events in path:", args.data_path
+        sys.exit(1)
 
     masscat = "highMass" if args.highmass else "lowMass"
     selection = "HGamEventInfoAuxDyn.yybb_%s_cutFlow==4 && HGamEventInfoAuxDyn.yybb_bTagCat==%d"%(masscat, args.btag)

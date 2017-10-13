@@ -7,7 +7,7 @@ The best-fit shape parameters of each slice are then plotted vs. m_yy and linear
 
 Setup
 ===
-You'll need some working combination of ROOT, X11, and numpy.
+You'll need some working combination of python2, ROOT, X11, and numpy.
 It works on my CentOS7 local cluster w/ ALRB but not on my lxplus, ymmv.
 
 Usage
